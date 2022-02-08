@@ -29,6 +29,10 @@ django-stubs = "^1.9.0"
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.pytest.ini_options]
+addopts = "--ds=config.settings.test --reuse-db"
+python_files = ["tests.py", "test_*.py"]
+
 [tool.isort]
 profile = "black"
 line_length = 79
