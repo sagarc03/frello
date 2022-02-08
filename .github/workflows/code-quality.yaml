@@ -6,7 +6,7 @@ on:
   push:
 
 env:
-  ROOT_FOLDERS: "config manage.py"
+  ROOT_FOLDERS: "config users manage.py"
   DJANGO_SETTINGS_MODULE: "config.settings.dev"
 
 jobs:
