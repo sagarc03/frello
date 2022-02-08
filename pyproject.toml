@@ -1,0 +1,96 @@
+[tool.poetry]
+name = "frello"
+version = "0.1.0"
+description = "A Fake Trello"
+authors = ["Sagar Chavan <sagar.c.03@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Django = "^4.0.2"
+psycopg2 = "^2.9.3"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.0.0"
+isort = "^5.10.1"
+black = "^22.1.0"
+pylint = "^2.12.2"
+mypy = "^0.931"
+pylint-django = "^2.5.0"
+pytest-django = "^4.5.2"
+coverage = "^6.3.1"
+django-coverage-plugin = "^2.0.2"
+django-extensions = "^3.1.5"
+Werkzeug = "^2.0.3"
+factory-boy = "^3.2.1"
+ipython = "^8.0.1"
+django-stubs = "^1.9.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+line_length = 79
+skip="migrations"
+
+[tool.black]
+line-length = 79
+exclude = '''
+/(
+  | migrations
+)/
+'''
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+
+
+[tool.mypy]
+python_version="3.10"
+python_executable=".venv/bin/python"
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module="config.settings.dev"
+
+[[tool.mypy.overrides]]
+module = [
+    "factory.*",
+]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "*.migrations.*"
+ignore_errors = true
+
+[tool.pylint.master]
+init-hook = '''
+import os, sys
+from pylint.config.find_default_config_files import find_default_config_files
+sys.path.append(os.path.join(os.path.dirname(list(find_default_config_files())[0]), ".venv/lib/python3.10/site-packages"))
+'''
+load-plugins=["pylint_django"]
+django-settings-module="config.settings.dev"
+
+
+[tool.pylint.message_control]
+max-line-length = 79
+disable=[
+    "relative-beyond-top-level",
+    "raw-checker-failed",
+    "bad-inline-option",
+    "locally-disabled",
+    "file-ignored",
+    "suppressed-message",
+    "useless-suppression",
+    "deprecated-pragma",
+    "use-symbolic-message-instead",
+    "duplicate-code",
+    "wrong-import-order"
+]
+max-parents=13

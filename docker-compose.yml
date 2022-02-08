@@ -1,0 +1,35 @@
+version: "3.9"
+
+volumes:
+  frello_local_psql_data: {}
+
+services:
+  django: &django
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    image: frello_local_django
+    container_name: frello_local_django
+    depends_on:
+      - postgres
+      - mailhog
+    volumes:
+      - .:/app:z
+    ports:
+      - "8000:8000"
+    command: /start
+
+  postgres:
+    image: postgres:13
+    container_name: frello_local_postgres
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=frello
+    volumes:
+      - frello_local_psql_data:/var/lib/postgresql/data:Z
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: frello_local_mailhog
+    ports:
+      - 8025:8025 # web ui
