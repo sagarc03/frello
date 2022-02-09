@@ -8,6 +8,7 @@ authors = ["Sagar Chavan <sagar.c.03@gmail.com>"]
 python = "^3.10"
 Django = "^4.0.2"
 psycopg2 = "^2.9.3"
+whitenoise = "^5.3.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0.0"

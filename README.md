@@ -99,6 +99,6 @@ Runing <x> command,
 docker-compose exec django <x>
 ```
 
-# Contrubutors
+# Contributors
 
 - names
