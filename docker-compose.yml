@@ -7,7 +7,7 @@ services:
   django: &django
     build:
       context: .
-      dockerfile: Dockerfile.local
+      dockerfile: Dockerfile.django.local
     image: frello_local_django
     container_name: frello_local_django
     depends_on:
