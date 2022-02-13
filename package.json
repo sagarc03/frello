@@ -1,0 +1,20 @@
+{
+  "name": "frello",
+  "version": "1.0.0",
+  "description": "An issue tracker / project management tool created for the semeter long assignment for CIS 594 Software Testing Principal & Techniques.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sagarc03/frello.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sagarc03/frello/issues"
+  },
+  "homepage": "https://github.com/sagarc03/frello#readme"
+}
