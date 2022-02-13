@@ -6,22 +6,20 @@ An issue tracker / project management tool created for the semeter long assignme
 
 #### VERSION 1
 
-* Some features
-* Some features
-* Some features
+- Some features
+- Some features
+- Some features
 
 #### VERSION 2
 
-* Some features
-* Some features
-
+- Some features
+- Some features
 
 # Learning Objectives
 
-* Perfom complete system test (every new release)
-* Keep track of risk for the project
-* Maintian project using a VCS.
-
+- Perfom complete system test (every new release)
+- Keep track of risk for the project
+- Maintian project using a VCS.
 
 # Development
 
@@ -32,7 +30,7 @@ The project is manged using [poetry](https://python-poetry.org/). Instruction to
 Once all the dependencies are resolved, you can start the server using,
 
 ```bash
-# without activating the virtual environment 
+# without activating the virtual environment
 poetry run python manage.py runserver_plus
 
 # With active virtial environment
@@ -40,8 +38,9 @@ python manage.py runserver_plus
 ```
 
 Running migrations
+
 ```bash
-# without activating the virtual environment 
+# without activating the virtual environment
 poetry run python manage.py makemigration <app_name>
 poetry run python manage.py migrate
 
@@ -53,7 +52,7 @@ python manage.py migrate
 You can run tests using,
 
 ```bash
-# without activating the virtual environment 
+# without activating the virtual environment
 poetry run pytest
 
 # With active virtial environment
@@ -91,6 +90,7 @@ This project uses pytest as its test runner, you can run tests,
 
 docker-compose exec django pytest
 ```
+
 Runing <x> command,
 
 ```bash

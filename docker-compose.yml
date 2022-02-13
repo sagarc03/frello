@@ -1,4 +1,4 @@
-version: "3.9"
+version: '3.9'
 
 volumes:
   frello_local_psql_data: {}
@@ -16,7 +16,7 @@ services:
     volumes:
       - .:/app:z
     ports:
-      - "8000:8000"
+      - '8000:8000'
     command: /start
 
   vue:
