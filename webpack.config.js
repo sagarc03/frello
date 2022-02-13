@@ -1,4 +1,5 @@
 const { VueLoaderPlugin } = require("vue-loader");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const path = require("path");
 
 module.exports = {
@@ -8,28 +9,14 @@ module.exports = {
   },
   output: {
     filename: "[name].js",
-    path: path.resolve(__dirname) + "/dist",
+    path: path.resolve(__dirname) + "/dist/js/",
   },
   module: {
     rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-        },
-      },
-      {
-        test: /\.vue$/,
-        loader: "vue-loader",
-      },
+      // JavaScript: Use Babel to transpile JavaScript files
+      { test: /\.vue$/, loader: "vue-loader" },
+      { test: /\.js$/, exclude: /node_modules/, use: ["babel-loader"] },
     ],
   },
-  plugins: [new VueLoaderPlugin()],
-  resolve: {
-    alias: {
-      vue$: "vue/dist/vue.runtime.esm.js",
-    },
-    extensions: ["*", ".js", ".vue", ".json"],
-  },
+  plugins: [new VueLoaderPlugin(), new CleanWebpackPlugin({ verbose: true })],
 };
