@@ -19,6 +19,16 @@ services:
       - "8000:8000"
     command: /start
 
+  vue:
+    build:
+      context: .
+      dockerfile: Dockerfile.vue.local
+    image: frello_local_vue
+    container_name: frello_local_vue
+    volumes:
+      - .:/app:z
+    command: npm start
+
   postgres:
     image: postgres:13
     container_name: frello_local_postgres
