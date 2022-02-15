@@ -3,6 +3,6 @@
 set -o errexit
 set -o nounset
 
-poetry install
+npm install
 
 exec "$@"

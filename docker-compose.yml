@@ -1,4 +1,4 @@
-version: "3.9"
+version: '3.9'
 
 volumes:
   frello_local_psql_data: {}
@@ -7,7 +7,7 @@ services:
   django: &django
     build:
       context: .
-      dockerfile: Dockerfile.local
+      dockerfile: Dockerfile.django.local
     image: frello_local_django
     container_name: frello_local_django
     depends_on:
@@ -16,8 +16,18 @@ services:
     volumes:
       - .:/app:z
     ports:
-      - "8000:8000"
+      - '8000:8000'
     command: /start
+
+  vue:
+    build:
+      context: .
+      dockerfile: Dockerfile.vue.local
+    image: frello_local_vue
+    container_name: frello_local_vue
+    volumes:
+      - .:/app:z
+    command: npm start
 
   postgres:
     image: postgres:13
