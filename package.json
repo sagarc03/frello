@@ -21,16 +21,24 @@
     "url": "https://github.com/sagarc03/frello/issues"
   },
   "homepage": "https://github.com/sagarc03/frello#readme",
-  "browserslist": ["> 1%", "last 2 versions", "not dead"],
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
   "devDependencies": {
     "@babel/core": "^7.17.2",
     "@babel/preset-env": "^7.16.11",
+    "@fontsource/roboto-mono": "^4.5.3",
     "babel-loader": "^8.2.3",
+    "bootstrap": "^5.1.3",
     "clean-webpack-plugin": "^4.0.0",
+    "css-loader": "^6.6.0",
     "eslint": "^8.9.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-vue": "^8.4.1",
     "install": "^0.13.0",
+    "mini-css-extract-plugin": "^2.5.3",
     "nodemon": "^2.0.15",
     "npm": "^8.5.0",
     "prettier": "^2.5.1",

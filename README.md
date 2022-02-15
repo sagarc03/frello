@@ -23,6 +23,8 @@ An issue tracker / project management tool created for the semeter long assignme
 
 # Development
 
+Its recomended to set up docker, and use docker-compose workflow suggests below for your developement process. It is the fastest way to set up.
+
 ## Local
 
 The project is manged using [poetry](https://python-poetry.org/). Instruction to install and setup poetry can be found [here](https://python-poetry.org/docs/master/#installation). The application also uses [postgres](https://www.postgresql.org/) as its primary database and [mailhog](https://github.com/mailhog/MailHog) as email client during developement. You can manage the config from the `config` module.
