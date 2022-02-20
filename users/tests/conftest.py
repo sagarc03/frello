@@ -9,10 +9,10 @@ from .factory import SuperUserFactory, UserFactory
 @pytest.fixture
 def user() -> User:
     """Generates a user for testing"""
-    return UserFactory()
+    return UserFactory()  # pyright: reportGeneralTypeIssues=false
 
 
 @pytest.fixture
 def admin() -> User:
     """Generates a user for testing"""
-    return SuperUserFactory()
+    return SuperUserFactory()  # pyright: reportGeneralTypeIssues=false

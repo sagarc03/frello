@@ -2,6 +2,7 @@ version: '3.9'
 
 volumes:
   frello_local_psql_data: {}
+  frello_local_django: {}
 
 services:
   django: &django
@@ -14,10 +15,17 @@ services:
       - postgres
       - mailhog
     volumes:
-      - .:/app:z
+      - ${PWD}:/app:z
+      - frello_local_django:/root/.cache/pypoetry
     ports:
       - '8000:8000'
-    command: /start
+    command:
+      - "poetry"
+      - "run"
+      - "python3"
+      - "manage.py"
+      - "runserver_plus"
+      - "0.0.0.0:8000"
 
   vue:
     build:
@@ -26,8 +34,10 @@ services:
     image: frello_local_vue
     container_name: frello_local_vue
     volumes:
-      - .:/app:z
-    command: npm start
+      - '${PWD}:/app:z'
+    ports:
+      - '3000:3000'
+    command: yarn dev
 
   postgres:
     image: postgres:13

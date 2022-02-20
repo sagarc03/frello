@@ -1,0 +1,16 @@
+{% extends "base/base.html" %}
+
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href={% static 'css/login.css' %}>
+    <title>Frello - Login</title>
+{% endblock %}
+
+{% block content %}
+    <div id="app"></div>
+{% endblock %}
+
+{% block script %}
+    <script src={% static 'js/login.js' %}></script>
+{% endblock %}

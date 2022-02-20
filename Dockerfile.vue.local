@@ -1,6 +1,5 @@
 ARG NODE_VERSION=lts-slim
 
-# Build and Run stage
 FROM node:${NODE_VERSION}
 
 WORKDIR /app

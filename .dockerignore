@@ -9,3 +9,4 @@
 .readthedocs.yml
 .travis.yml
 .venv
+node_modules

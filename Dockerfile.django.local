@@ -5,19 +5,15 @@ FROM python:${PYTHON_VERSION} as python
 WORKDIR /app
 
 RUN apt-get update \
-    && apt-get install -y build-essential curl libpq-dev \
+    && apt-get install -y build-essential curl libpq-dev libyaml-dev \
     && rm -rf /var/lib/apt/lists/* \
     && curl -sSL https://install.python-poetry.org | python3 -
 
 ENV PATH "$PATH:/root/.local/bin/"
-RUN poetry config virtualenvs.in-project true
+RUN poetry config virtualenvs.in-project false
 
 COPY  ./bin/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
 RUN chmod +x /entrypoint
-
-COPY  ./bin/start /start
-RUN sed -i 's/\r$//g' /start
-RUN chmod +x /start
 
 ENTRYPOINT ["/entrypoint"]
