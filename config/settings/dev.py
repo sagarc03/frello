@@ -15,14 +15,8 @@ ips = socket.gethostbyname_ex(socket.gethostname())[-1]
 INTERNAL_IPS = [ip[:-1] + "1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
 
 INSTALLED_APPS = [
-    "whitenoise.runserver_nostatic",
-    "debug_toolbar",
     "django_extensions",
 ] + INSTALLED_APPS
-
-MIDDLEWARE = MIDDLEWARE + [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
-]
 
 SHELL_PLUS = "ipython"
 
