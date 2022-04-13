@@ -8,8 +8,11 @@ authors = ["Sagar Chavan <sagar.c.03@gmail.com>"]
 python = "^3.10"
 Django = "^4.0.2"
 psycopg2 = "^2.9.3"
-djangorestframework = "^3.13.1"
-djangorestframework-simplejwt = "^5.0.0"
+django-extensions = "^3.1.5"
+ipython = "^8.0.1"
+Werkzeug = "^2.1.1"
+whitenoise = "^6.0.0"
+
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0.0"
@@ -21,18 +24,16 @@ pylint-django = "^2.5.0"
 pytest-django = "^4.5.2"
 coverage = "^6.3.1"
 django-coverage-plugin = "^2.0.2"
-django-extensions = "^3.1.5"
-Werkzeug = {extras = ["watchdog"], version = "^2.0.3"}
 factory-boy = "^3.2.1"
-ipython = "^8.0.1"
 django-stubs = "^1.9.0"
+watchdog = {extras = ["watchmedo"], version = "^2.1.6"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
-addopts = "--ds=config.settings.test --reuse-db"
+addopts = "--ds=config.settings.test --pdbcls=IPython.terminal.debugger:TerminalPdb"
 python_files = ["tests.py", "test_*.py"]
 
 [tool.isort]

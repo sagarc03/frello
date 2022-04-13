@@ -1,55 +1,48 @@
 version: '3.9'
 
 volumes:
-  frello_local_psql_data: {}
-  frello_local_django: {}
+  frello_psql: {}
+  frello_poetry_cache: {}
 
 services:
-  django: &django
+  app: &django
     build:
       context: .
-      dockerfile: Dockerfile.django.local
-    image: frello_local_django
-    container_name: frello_local_django
+      dockerfile: Dockerfile.django.dev
+    image: frello
+    container_name: frello_app
+    restart: always
     depends_on:
       - postgres
       - mailhog
     volumes:
-      - ${PWD}:/app:z
-      - frello_local_django:/root/.cache/pypoetry
+      - ${PWD}:/app
+      - frello_poetry_cache:/root/.cache/pypoetry
     ports:
       - '8000:8000'
     command:
-      - "poetry"
-      - "run"
-      - "python3"
-      - "manage.py"
-      - "runserver_plus"
-      - "0.0.0.0:8000"
-
-  vue:
-    build:
-      context: .
-      dockerfile: Dockerfile.vue.local
-    image: frello_local_vue
-    container_name: frello_local_vue
-    volumes:
-      - '${PWD}:/app:z'
-    ports:
-      - '3000:3000'
-    command: yarn dev
+      - 'python'
+      - 'manage.py'
+      - 'runserver'
+      - '0.0.0.0:8000'
 
   postgres:
     image: postgres:13
-    container_name: frello_local_postgres
+    container_name: frello_postgres
     environment:
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=frello
     volumes:
-      - frello_local_psql_data:/var/lib/postgresql/data:Z
+      - frello_psql:/var/lib/postgresql/data:Z
 
   mailhog:
     image: mailhog/mailhog
-    container_name: frello_local_mailhog
+    container_name: frello_mailhog
     ports:
       - 8025:8025 # web ui
+
+  adminer:
+    image: adminer
+    container_name: frello_adminer
+    restart: always
+    ports:
+      - 8080:8080

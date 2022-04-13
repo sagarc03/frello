@@ -5,4 +5,4 @@ set -o nounset
 
 poetry install
 
-exec "$@"
+exec poetry run "$@"
