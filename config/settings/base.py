@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "django_extensions",
     # Application
     "custom_auth",
+    "frello",
 ]
 
 MIDDLEWARE = [

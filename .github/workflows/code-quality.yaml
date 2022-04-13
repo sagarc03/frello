@@ -72,3 +72,6 @@ jobs:
         run: |
           poetry run isort ${{ env.ROOT_FOLDERS }} -c --diff
           echo "isort check ok"
+
+      - name: djhtml
+        run: poetry run djhtml templates/* -t 2 --check
