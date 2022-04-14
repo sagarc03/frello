@@ -9,7 +9,7 @@ from django.views.decorators.http import require_http_methods
 @require_http_methods(["GET"])
 def index(request: HttpRequest) -> HttpResponse:
     """renders landing page"""
-    return render(request, template_name="dashboard.html")
+    return render(request, template_name="frello/dashboard.html")
 
 
 @require_http_methods(["GET"])
