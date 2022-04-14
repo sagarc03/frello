@@ -1,3 +1,4 @@
+{# Sidebar #}
 <aside
   class="menu is-flex-shrink-0 p-3 is-flex is-flex-direction-column is-justify-content-space-between has-background-primary"
   style="
@@ -19,7 +20,8 @@
     <p class="menu-label">Add Projects</p>
     <ul class="menu-list">
       <li>
-        <form hx-post="add/" class="m-1">
+        <form hx-post="{% url 'frello:add' %}" class="m-1" hx-target="#your-projects">
+          {% csrf_token %}
           <div class="field is-flex">
             <p class="control has-icons-left">
               <input
@@ -42,17 +44,8 @@
       </li>
     </ul>
     <p class="menu-label">Your Projects</p>
-    <ul class="menu-list">
-      <li><a>Team Settings</a></li>
-      <li><a>Invitations</a></li>
-      <li><a>Cloud Storage Environment Settings</a></li>
-      <li><a>Authentication</a></li>
-      <li><a>Authentication</a></li>
-      <li><a>Authentication</a></li>
-      <li><a>Authentication</a></li>
-      <li><a>Authentication</a></li>
-      <li><a>Authentication</a></li>
-      <li><a>Authentication</a></li>
+    <ul class="menu-list" id="your-projects">
+      {% include "frello/your_project_list.html" %}
     </ul>
   </div>
   <form hx-post="{% url 'auth:logout' %}" class="m-1">

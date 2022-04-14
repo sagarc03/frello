@@ -1,0 +1,62 @@
+{% extends 'frello/base.html' %} {% block main %}
+  <div class="box columns m-2">
+    <div class="column is-full">
+      <h1 class="title">{{ project.name }}</h1>
+      {% if project.description %}
+        <h2 class="subtitle">{{ project.description }}</h2>
+      {% endif %}
+    </div>
+  </div>
+  <div class="columns m-2">
+    <div class="box column is-three-quarters has-background-warning m-1">
+      <form hx-post="{% url 'frello:add' %}" class="m-1" hx-target="#your-projects">
+        {% csrf_token %}
+        <div class="field is-flex">
+          <p class="control has-icons-left m-1">
+            <input
+              class="input"
+              type="text"
+              name="name"
+              placeholder="Projects Name"
+            />
+            <span class="icon is-small is-left">
+              <i class="bx bxs-book-open"></i>
+            </span>
+          </p>
+          <button class="button m-1">
+            <span class="icon is-small">
+              <i class="bx bx-plus"></i>
+            </span>
+          </button>
+        </div>
+      </form>
+      isssue
+    </div>
+    <div class="box column has-background-info m-1">
+      <h1 class="is-size-4">Contributors</h1>
+      <form hx-post="{% url 'frello:contributor-add' project.id %}" class="m-1" hx-target="#contributor-list">
+        {% csrf_token %}
+        <input type="hidden" name="project_id" id="project_id" value="{{project.pk}}">
+        <div class="field has-addons">
+          <div class="control is-expanded">
+            <div class="select is-fullwidth">
+              <select name="contributor_id">
+                <option value="" selected>--------</option>
+                {% for other_user in other_users %}
+                  <option value="{{ other_user.id }}">{{ other_user.username }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="control">
+            <button type="submit" class="button is-primary">Add</button>
+          </div>
+        </div>
+      </form>
+      <div id="contributor-list">
+        {% include "frello/contributor_list.html" %}
+      </div>
+    </div>
+  </div>
+
+{% endblock main %}

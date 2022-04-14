@@ -1,0 +1,4 @@
+{# your project list #}
+{% for project in your_project_list  %}
+  <li><a href="{% url 'frello:project-page' project.id %}">{{ project.name }}</a></li>
+{% endfor %}

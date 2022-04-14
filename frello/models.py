@@ -5,7 +5,7 @@ from django.db import models
 
 class Project(models.Model):
     """
-    Project
+    Frello Project
     """
 
     name = models.CharField(verbose_name="Project name", max_length=150)
@@ -15,9 +15,23 @@ class Project(models.Model):
         get_user_model(), related_name="project_contributors"
     )
 
+    class Meta:
+        unique_together = (
+            "name",
+            "owner",
+        )
+
 
 class Issue(models.Model):
+    """
+    Project Issue
+    """
+
     class Status(models.TextChoices):
+        """
+        Status of each issue
+        """
+
         OPENED = "OP", "opened"
         REOPENED = "RO", "reopened"
         CLOSED = "CL", "closed"
