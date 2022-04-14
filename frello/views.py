@@ -80,7 +80,7 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
     context_object_name = "project"
 
     def get_queryset(self) -> QuerySet[Any]:
-        return Project.objects.filter(  # type: ignore
+        return Project.objects.filter(
             Q(owner=self.request.user) | Q(contributors=self.request.user.pk)
         ).all()
 

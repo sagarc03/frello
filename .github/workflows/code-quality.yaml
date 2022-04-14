@@ -60,4 +60,4 @@ jobs:
           echo "isort check ok"
 
       - name: djhtml
-        run: poetry run djhtml templates/* -t 2 --check
+        run: find templates -type f | xargs poetry run djhtml -t 2 -c

@@ -1,15 +1,15 @@
 <ul class="menu-list">
   {% for issue in issue_list %}
-  <li class="is-flex is-justify-content-space-between">
+    <li class="is-flex is-justify-content-space-between">
       <a href={% url 'frello:issue-page' project.id issue.issue_number %}>#{{ issue.issue_number}} {{ issue.title }}</a>
-    <form
-      hx-post="{% url 'frello:issue-delete' project.id issue.id %}"
-      class="m-1"
-      hx-target="#issue-list"
-    >
-      {% csrf_token %}
-      <button class="delete" type="submit"></button>
-    </form>
-  </li>
+      <form
+        hx-post="{% url 'frello:issue-delete' project.id issue.id %}"
+        class="m-1"
+        hx-target="#issue-list"
+      >
+        {% csrf_token %}
+        <button class="delete" type="submit"></button>
+      </form>
+    </li>
   {% endfor %}
 </ul>
