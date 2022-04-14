@@ -17,7 +17,7 @@ def user_registration(request: HttpRequest) -> HttpResponse:
     ):
         return HttpResponse(
             "Please provide username, email and password(s) to register.",
-            status=404,
+            status=400,
         )
 
     username = request.POST["username"]
@@ -28,19 +28,19 @@ def user_registration(request: HttpRequest) -> HttpResponse:
     if User.objects.filter(username=username).exists():
         return HttpResponse(
             f"User with username: {username} already exists. Try login in.",
-            status=404,
+            status=400,
         )
 
     if User.objects.filter(email=email).exists():
         return HttpResponse(
             f"User with email: {email} already exists. Try loging in.",
-            status=404,
+            status=400,
         )
 
     if password != password2:
         return HttpResponse(
             "passwords provide don't match, please resubmit.",
-            status=404,
+            status=400,
         )
     user = User(username=username, email=email)
     user.set_password(password)
@@ -55,7 +55,7 @@ def user_login(request: HttpRequest) -> HttpResponse:
     """renders landing page"""
     if "username" not in request.POST or "password" not in request.POST:
         return HttpResponse(
-            "Please provide both username and password to login.", status=404
+            "Please provide both username and password to login.", status=400
         )
     username = request.POST["username"]
     password = request.POST["password"]
@@ -66,7 +66,7 @@ def user_login(request: HttpRequest) -> HttpResponse:
             status=204, headers={"HX-Redirect": reverse("frello:index")}
         )
     return HttpResponse(
-        "User matching the given credentials not found.", status=404
+        "User matching the given credentials not found.", status=400
     )
 
 
