@@ -1,0 +1,21 @@
+ARG PYTHON_VERSION=3.10-slim
+
+FROM python:${PYTHON_VERSION} as python
+
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y build-essential curl libpq-dev libyaml-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -sSL https://install.python-poetry.org | python3 -
+
+ENV PATH "$PATH:/root/.local/bin/"
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+RUN poetry config virtualenvs.in-project false
+
+COPY  ./bin/entrypoint /entrypoint
+RUN sed -i 's/\r$//g' /entrypoint
+RUN chmod +x /entrypoint
+
+ENTRYPOINT ["/entrypoint"]

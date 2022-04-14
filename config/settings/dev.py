@@ -1,4 +1,6 @@
 """dev settings"""
+import socket
+
 from .base import *  # pylint: disable=wildcard-import,unused-wildcard-import
 
 SECRET_KEY = (
@@ -9,12 +11,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-INSTALLED_APPS = [
-    "whitenoise.runserver_nostatic",
-    "django_extensions",
-] + INSTALLED_APPS
-
-SHELL_PLUS = "ipython"
+ips = socket.gethostbyname_ex(socket.gethostname())[-1]
+INTERNAL_IPS = [ip[:-1] + "1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
 
 EMAIL_HOST = os.environ.get("EMAIL_HOST", "mailhog")
 EMAIL_PORT = os.environ.get("EMAIL_PORT", 1025)
