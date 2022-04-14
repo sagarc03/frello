@@ -37,9 +37,11 @@ class Issue(models.Model):
         CLOSED = "CL", "closed"
 
     issue_number = models.IntegerField()
-    create_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     status = models.CharField(
         max_length=2, choices=Status.choices, default=Status.OPENED
     )
+    title = models.CharField(max_length=150)
+    description = models.TextField()
     is_delete = models.BooleanField(default=False)

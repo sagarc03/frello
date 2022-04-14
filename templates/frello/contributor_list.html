@@ -1,5 +1,36 @@
-{% for contributor in project.contributors.all %}
-<div class="block">
-  <strong>{{ contributor.username}}</strong>
+{# contributor-list #}
+<div class="panel-block">
+  <form hx-post="{% url 'frello:contributor-add' project.id %}" class="m-1" hx-target="#contributor-list">
+    {% csrf_token %}
+    <input type="hidden" name="project_id" id="project_id" value="{{project.pk}}">
+    <div class="field has-addons">
+      <div class="control is-expanded">
+        <div class="select is-fullwidth">
+          <select name="contributor_id">
+            <option value="" selected>--------</option>
+            {% for other_user in other_users %}
+              <option value="{{ other_user.id }}">{{ other_user.username }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="control">
+        <button type="submit" class="button is-primary">Add</button>
+      </div>
+    </div>
+  </form>
 </div>
+{% for contributor in project.contributors.all %}
+  <div class="is-flex is-justify-content-space-between is-align-items-center">
+    <a class="panel-block">
+      <span class="panel-icon">
+        <i class="bx bxs-user-voice bx-sm"></i>
+      </span>
+      <strong>{{ contributor.username}}</strong>
+    </a>
+    <form hx-post="{% url 'frello:contributor-remove' project.id contributor.id %}" class="m-1" hx-target="#contributor-list">
+      {% csrf_token %}
+      <button class="delete" type="submit"></button>
+    </form>
+  </div>
 {% endfor %}

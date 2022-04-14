@@ -6,7 +6,7 @@ from django.http.response import HttpResponseNotFound
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_http_methods
 
-from .models import Project
+from .models import Issue, Project
 
 
 @login_required
@@ -87,6 +87,7 @@ def get_project(request: HttpRequest, project_id: int) -> HttpResponse:
                 owner=request.user
             ),
             "project": proj,
+            "issue_list": Issue.objects.filter(project=proj, is_delete=False),
             "other_users": proj_contributors,
         },
     )
@@ -127,10 +128,155 @@ def add_contributor_to_project(
         request,
         template_name="frello/contributor_list.html",
         context={
+            "project": proj,
+            "other_users": proj_contributors,
+        },
+    )
+
+
+@login_required
+@require_http_methods(["POST"])
+def delete_contributor(
+    request: HttpRequest, project_id: int, user_id: int
+) -> HttpResponse:
+    """add contributors to project"""
+    try:
+        proj = Project.objects.get(pk=project_id)
+    except Project.DoesNotExist:
+        return HttpResponse(
+            "Project does not exists.",
+            status=404,
+        )
+    try:
+        user = get_user_model().objects.get(pk=user_id)
+    except get_user_model().DoesNotExist:
+        return HttpResponse(
+            "user not found.",
+            status=404,
+        )
+    proj.contributors.remove(user)
+    proj.save()
+    proj_contributors = get_user_model().objects.exclude(
+        id__in=proj.contributors.all().values_list("id"),
+    )
+    proj_contributors = proj_contributors.exclude(id=request.user.pk)
+
+    return render(
+        request,
+        template_name="frello/contributor_list.html",
+        context={
+            "project": proj,
+            "other_users": proj_contributors,
+        },
+    )
+
+
+@login_required
+@require_http_methods(["POST"])
+def add_issue(request: HttpRequest, project_id: int) -> HttpResponse:
+    """add issue to project"""
+    try:
+        proj = Project.objects.get(pk=project_id)
+    except Project.DoesNotExist:
+        return HttpResponse(
+            "Project does not exists.",
+            status=404,
+        )
+    if (
+        proj.owner != request.user
+        and request.user not in proj.contributors.all()
+    ):
+        return HttpResponse(
+            "Project does not exists.",
+            status=404,
+        )
+
+    issue_number = Issue.objects.filter(project=proj).count()
+    Issue.objects.create(  # type: ignore
+        issue_number=issue_number + 1,
+        project=proj,
+        created_by=request.user,
+        title=request.POST["title"],
+        description=request.POST.get("description", ""),
+    )
+
+    proj_contributors = get_user_model().objects.exclude(
+        id__in=proj.contributors.all().values_list("id"),
+    )
+    proj_contributors = proj_contributors.exclude(id=request.user.pk)
+    return render(
+        request,
+        template_name="frello/issue_list.html",
+        context={
+            "project": proj,
+            "issue_list": Issue.objects.filter(project=proj, is_delete=False),
+        },
+    )
+
+
+@login_required
+@require_http_methods(["POST"])
+def delete_issue(
+    request: HttpRequest, project_id: int, issue_id: int
+) -> HttpResponse:
+    """add issue to project"""
+    try:
+        proj = Project.objects.get(pk=project_id)
+    except Project.DoesNotExist:
+        return HttpResponse(
+            "Project does not exists.",
+            status=404,
+        )
+    if (
+        proj.owner != request.user
+        and request.user not in proj.contributors.all()
+    ):
+        return HttpResponse(
+            "Project does not exists.",
+            status=404,
+        )
+
+    try:
+        issue = Issue.objects.get(pk=issue_id)
+    except Issue.DoesNotExist:
+        return HttpResponse(
+            "Issue does not exists.",
+            status=404,
+        )
+    issue.is_delete = True
+    issue.save()
+    return render(
+        request,
+        template_name="frello/issue_list.html",
+        context={
+            "project": proj,
+            "issue_list": Issue.objects.filter(project=proj, is_delete=False),
+        },
+    )
+
+
+@login_required
+@require_http_methods(["GET"])
+def issue_page(request: HttpRequest, issue_id: int) -> HttpResponse:
+    """get issue page"""
+    if (
+        not Issue.objects.filter(pk=issue_id).exists()
+        or Issue.objects.get(pk=issue_id).project.owner != request.user
+        or request.user
+        not in Issue.objects.get(pk=issue_id).project.contributors.all()
+    ):
+        return HttpResponse(
+            "issue does not exists.",
+            status=404,
+        )
+    return render(
+        request,
+        template_name="frello/issue_page.html",
+        context={
             "your_project_list": Project.objects.filter(  # type: ignore
                 owner=request.user
             ),
-            "project": proj,
-            "other_users": proj_contributors,
+            "issue_list": Issue.objects.filter(project=proj),
+            "issue": Issue.objects.get(pk=issue_id),
         },
     )
