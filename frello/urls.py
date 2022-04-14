@@ -2,24 +2,24 @@
 from django.urls import path
 
 from .views import (
+    Dashboard,
+    LandingPage,
+    ProjectDetailView,
     add_contributor_to_project,
     add_issue,
     add_project,
     delete_contributor,
     delete_issue,
-    get_project,
-    index,
     issue_page,
-    landing,
     update_issue,
 )
 
 app_name = "frello"
 
 urlpatterns = [
-    path("login/", landing, name="login"),
+    path("login/", LandingPage.as_view(), name="login"),
     path("add/", add_project, name="add"),
-    path("project/<int:project_id>", get_project, name="project-page"),
+    path("project/<int:pk>", ProjectDetailView.as_view(), name="project-page"),
     path(
         "project/<int:project_id>/contributor/add/",
         add_contributor_to_project,
@@ -55,5 +55,5 @@ urlpatterns = [
         update_issue,
         name="issue-update",
     ),
-    path("", index, name="index"),
+    path("", Dashboard.as_view(), name="index"),
 ]

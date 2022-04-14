@@ -1,33 +1,39 @@
 """frello views"""
+from typing import Any
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q, QuerySet
 from django.http import HttpRequest, HttpResponse
-from django.http.response import HttpResponseNotFound
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
+from django.views.generic import DetailView, TemplateView
 
 from .models import Issue, Project
 
 
-@login_required
-@require_http_methods(["GET"])
-def index(request: HttpRequest) -> HttpResponse:
-    """renders landing page"""
-    return render(
-        request,
-        template_name="frello/dashboard.html",
-        context={
-            "your_project_list": Project.objects.filter(  # type: ignore
-                owner=request.user
-            )
-        },
-    )
+class LandingPage(TemplateView):
+    """
+    Landing page containing login and registration
+    """
+
+    template_name = "login_page.html"
 
 
-@require_http_methods(["GET"])
-def landing(request: HttpRequest) -> HttpResponse:
-    """renders landing page"""
-    return render(request, template_name="login_page.html")
+class Dashboard(LoginRequiredMixin, TemplateView):
+    """
+    Render renders main dashboard page
+    """
+
+    template_name = "frello/dashboard.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["your_project_list"] = Project.objects.filter(  # type: ignore
+            owner=self.request.user
+        )
+        return context
 
 
 @login_required
@@ -65,35 +71,33 @@ def add_project(request: HttpRequest) -> HttpResponse:
     )
 
 
-@login_required
-@require_http_methods(["GET"])
-def get_project(request: HttpRequest, project_id: int) -> HttpResponse:
-    """get project_page"""
-    proj = get_object_or_404(Project, pk=project_id)
+class ProjectDetailView(LoginRequiredMixin, DetailView):
+    """
+    Project view
+    """
 
-    if (
-        proj.owner != request.user
-        and request.user not in proj.contributors.all()
-    ):
-        return HttpResponseNotFound()
+    template_name = "frello/project_page.html"
+    context_object_name = "project"
 
-    proj_contributors = get_user_model().objects.exclude(
-        id__in=proj.contributors.all().values_list("id"),
-    )
-    proj_contributors = proj_contributors.exclude(id=request.user.pk)
+    def get_queryset(self) -> QuerySet[Any]:
+        return Project.objects.filter(  # type: ignore
+            Q(owner=self.request.user) | Q(contributors=self.request.user.pk)
+        ).all()
 
-    return render(
-        request,
-        template_name="frello/project_page.html",
-        context={
-            "your_project_list": Project.objects.filter(  # type: ignore
-                owner=request.user
-            ),
-            "project": proj,
-            "issue_list": Issue.objects.filter(project=proj, is_delete=False),
-            "other_users": proj_contributors,
-        },
-    )
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["your_project_list"] = Project.objects.filter(  # type: ignore
+            owner=self.request.user
+        ).all()
+        context["issue_list"] = Issue.objects.filter(
+            project=self.get_object(), is_delete=False
+        )
+        proj_contributors = get_user_model().objects.exclude(
+            id__in=self.get_object().contributors.all().values_list("id"),
+        )
+        proj_contributors = proj_contributors.exclude(id=self.request.user.pk)
+        context["other_users"] = proj_contributors
+        return context
 
 
 @login_required
