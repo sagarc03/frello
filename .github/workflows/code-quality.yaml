@@ -6,8 +6,8 @@ on:
   push:
 
 env:
-  ROOT_FOLDERS: 'config users manage.py'
-  DJANGO_SETTINGS_MODULE: 'config.settings.dev'
+  ROOT_FOLDERS: "config users manage.py"
+  DJANGO_SETTINGS_MODULE: "config.settings.dev"
 
 jobs:
   ci:
@@ -21,7 +21,7 @@ jobs:
       - name: Set up python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
       - name: Install Poetry
         run: |
@@ -44,20 +44,6 @@ jobs:
 
       - name: Install Python dependencies
         run: poetry install --no-interaction
-
-      - name: Change into backend
-        run: cd frontend
-
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 'lts/*'
-          cache: 'npm'
-
-      - name: Install NPM dependencies 
-        run: npm install
-
-      - name: eslint
-        run: npm run lint
 
       - name: pylint
         run: poetry run pylint ${{ env.ROOT_FOLDERS }}
