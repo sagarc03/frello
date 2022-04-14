@@ -9,7 +9,9 @@ class Project(models.Model):
     """
 
     name = models.CharField(verbose_name="Project name", max_length=150)
-    description = models.TextField(verbose_name="Project description")
+    description = models.TextField(
+        verbose_name="Project description", default=""
+    )
     owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     contributors = models.ManyToManyField(
         get_user_model(), related_name="project_contributors"
