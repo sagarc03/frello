@@ -6,7 +6,7 @@ on:
   push:
 
 env:
-  ROOT_FOLDERS: "config users manage.py"
+  ROOT_FOLDERS: "config custom_auth frello manage.py"
   DJANGO_SETTINGS_MODULE: "config.settings.dev"
 
 jobs:
