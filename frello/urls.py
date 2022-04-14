@@ -9,7 +9,9 @@ from .views import (
     delete_issue,
     get_project,
     index,
+    issue_page,
     landing,
+    update_issue,
 )
 
 app_name = "frello"
@@ -44,9 +46,14 @@ urlpatterns = [
         name="issue-update",
     ),
     path(
-        "project/<int:project_id>/issue/<int:issue_id>/",
-        add_issue,
+        "project/<int:project_id>/issue/<int:issue_number>/",
+        issue_page,
         name="issue-page",
+    ),
+    path(
+        "project/<int:project_id>/issue/<int:issue_number>/update",
+        update_issue,
+        name="issue-update",
     ),
     path("", index, name="index"),
 ]

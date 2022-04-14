@@ -1,0 +1,42 @@
+{# issue detail page #}
+<form hx-post="{% url 'frello:issue-update' project.id issue.issue_number %}" hx-targe="#issue-detail" id="issue-detail" hx-swap="outerHTML">
+  {% csrf_token %}
+  <div class="box columns m-2">
+    <div class="column is-four-fifths">
+
+      <div class="field">
+        <label class="label">Detail</label>
+        <div class="control">
+          <textarea class="textarea" name="description">{{ issue.description }}</textarea>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Subject</label>
+        <div class="control">
+          <div class="select">
+            <select name="status">
+              {% for status in issue_status %}
+                <option value={{ status.0 }} {% if issue.status == status.0 %} selected {% endif %}>{{ status.1 }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="control">
+        <button type="submit" class="button is-primary">Update</button>
+      </div>
+    </div>
+
+    <div class="column">
+      <fieldset disabled>
+        <div class="field">
+          <label class="label">Created By</label>
+          <div class="control">
+            <input class="input" type="text" value="{{ issue.created_by.username}}">
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+</form>

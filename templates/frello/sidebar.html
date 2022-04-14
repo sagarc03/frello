@@ -47,6 +47,13 @@
     <ul class="menu-list" id="your-projects">
       {% include "frello/your_project_list.html" %}
     </ul>
+
+    <p class="menu-label">Other Projects</p>
+    <ul class="menu-list" id="your-projects">
+      {% for project in user.project_contributors.all  %}
+        <li><a href="{% url 'frello:project-page' project.id %}">{{ project.name }}</a></li>
+      {% endfor %}
+    </ul>
   </div>
   <form hx-post="{% url 'auth:logout' %}" class="m-1">
     {% csrf_token %}

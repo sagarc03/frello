@@ -1,0 +1,12 @@
+{% extends 'frello/base.html' %}
+
+{% block main %}
+  <div class="box columns m-2">
+    <div class="column is-full">
+      <h1 class="title">{{ issue.title }}</h1>
+    </div>
+  </div>
+
+  {% include "frello/issue_detail.html" %}
+
+{% endblock main %}

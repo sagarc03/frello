@@ -34,7 +34,7 @@ def landing(request: HttpRequest) -> HttpResponse:
 @require_http_methods(["POST"])
 def add_project(request: HttpRequest) -> HttpResponse:
     """create new project"""
-    if "name" not in request.POST:
+    if len(request.POST.get("name", "")) == 0:
         return HttpResponse(
             "Please provide name for the project.",
             status=404,
@@ -71,7 +71,10 @@ def get_project(request: HttpRequest, project_id: int) -> HttpResponse:
     """get project_page"""
     proj = get_object_or_404(Project, pk=project_id)
 
-    if proj.owner != request.user:
+    if (
+        proj.owner != request.user
+        and request.user not in proj.contributors.all()
+    ):
         return HttpResponseNotFound()
 
     proj_contributors = get_user_model().objects.exclude(
@@ -257,13 +260,31 @@ def delete_issue(
 
 @login_required
 @require_http_methods(["GET"])
-def issue_page(request: HttpRequest, issue_id: int) -> HttpResponse:
+def issue_page(
+    request: HttpRequest, project_id: int, issue_number: int
+) -> HttpResponse:
     """get issue page"""
     if (
-        not Issue.objects.filter(pk=issue_id).exists()
-        or Issue.objects.get(pk=issue_id).project.owner != request.user
-        or request.user
-        not in Issue.objects.get(pk=issue_id).project.contributors.all()
+        not Project.objects.filter(pk=project_id).exists()
+        or not Issue.objects.filter(
+            project=Project.objects.get(pk=project_id),
+            issue_number=issue_number,
+        ).exists()
+        or Issue.objects.get(
+            project=Project.objects.get(pk=project_id),
+            issue_number=issue_number,
+        ).is_delete
+        or (
+            Issue.objects.get(
+                project=Project.objects.get(pk=project_id),
+                issue_number=issue_number,
+            ).project.owner
+            != request.user
+            and request.user
+            not in Issue.objects.get(
+                issue_number=issue_number
+            ).project.contributors.all()
+        )
     ):
         return HttpResponse(
             "issue does not exists.",
@@ -276,7 +297,68 @@ def issue_page(request: HttpRequest, issue_id: int) -> HttpResponse:
             "your_project_list": Project.objects.filter(  # type: ignore
                 owner=request.user
             ),
-            "issue_list": Issue.objects.filter(project=proj),
-            "issue": Issue.objects.get(pk=issue_id),
+            "project": Project.objects.get(pk=project_id),
+            "issue": Issue.objects.get(
+                project=Project.objects.get(pk=project_id),
+                issue_number=issue_number,
+            ),
+            "issue_status": Issue.Status.choices,
+        },
+    )
+
+
+@require_http_methods(["POST"])
+def update_issue(
+    request: HttpRequest, project_id: int, issue_number: int
+) -> HttpResponse:
+    """update issue"""
+    if (
+        not Project.objects.filter(pk=project_id).exists()
+        or not Issue.objects.filter(
+            project=Project.objects.get(pk=project_id),
+            issue_number=issue_number,
+        ).exists()
+        or Issue.objects.get(
+            project=Project.objects.get(pk=project_id),
+            issue_number=issue_number,
+        ).is_delete
+        or (
+            Issue.objects.get(
+                project=Project.objects.get(pk=project_id),
+                issue_number=issue_number,
+            ).project.owner
+            != request.user
+            and request.user
+            not in Issue.objects.get(
+                issue_number=issue_number
+            ).project.contributors.all()
+        )
+    ):
+        return HttpResponse(
+            "issue does not exists.",
+            status=404,
+        )
+    issue = Issue.objects.get(
+        project=Project.objects.get(pk=project_id),
+        issue_number=issue_number,
+    )
+
+    if "status" not in request.POST:
+        return HttpResponse(
+            "status missing.",
+            status=404,
+        )
+    if "description" in request.POST:
+        issue.description = request.POST["description"]
+    if "status" in request.POST:
+        issue.status = request.POST["status"]
+    issue.save()
+    return render(
+        request,
+        template_name="frello/issue_detail.html",
+        context={
+            "project": Project.objects.get(pk=project_id),
+            "issue": issue,
+            "issue_status": Issue.Status.choices,
         },
     )
