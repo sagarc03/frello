@@ -136,5 +136,8 @@ STATICFILES_DIRS = [BASE_DIR / "public"]
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 AUTH_USER_MODEL = "custom_auth.User"
 ADMIN_URL = "admin/"
+LOGIN_URL = "frello:login"
+LOGIN_REDIRECT_URL = "frello:index"
+LOGOUT_REDIRECT_URL = "frello:login"
 
 SHELL_PLUS = "ipython"

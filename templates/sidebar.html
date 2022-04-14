@@ -1,0 +1,62 @@
+<aside
+  class="menu is-flex-shrink-0 p-3 is-flex is-flex-direction-column is-justify-content-space-between has-background-primary"
+  style="
+    width: 250px;
+    height: 100vh;
+    max-height: 100vh;
+    position: sticky;
+    left: 0;
+    top: 0;
+  "
+>
+  <div>
+    <a href="{% url 'frello:index' %}">
+      <div class="is-flex is-align-items-center has-text-white">
+        <i class="bx bxs-hard-hat bx-lg mx-2"></i>
+        <span class="is-size-2">Frello</span>
+      </div>
+    </a>
+    <p class="menu-label">Add Projects</p>
+    <ul class="menu-list">
+      <li>
+        <form hx-post="add/" class="m-1">
+          <div class="field is-flex">
+            <p class="control has-icons-left">
+              <input
+                class="input"
+                type="text"
+                name="name"
+                placeholder="Projects Name"
+              />
+              <span class="icon is-small is-left">
+                <i class="bx bxs-book-open"></i>
+              </span>
+            </p>
+            <button class="button">
+              <span class="icon is-small">
+                <i class="bx bx-plus"></i>
+              </span>
+            </button>
+          </div>
+        </form>
+      </li>
+    </ul>
+    <p class="menu-label">Your Projects</p>
+    <ul class="menu-list">
+      <li><a>Team Settings</a></li>
+      <li><a>Invitations</a></li>
+      <li><a>Cloud Storage Environment Settings</a></li>
+      <li><a>Authentication</a></li>
+      <li><a>Authentication</a></li>
+      <li><a>Authentication</a></li>
+      <li><a>Authentication</a></li>
+      <li><a>Authentication</a></li>
+      <li><a>Authentication</a></li>
+      <li><a>Authentication</a></li>
+    </ul>
+  </div>
+  <form hx-post="{% url 'auth:logout' %}" class="m-1">
+    {% csrf_token %}
+    <button type="submit" class="button is-danger is-fullwidth">Logout</button>
+  </form>
+</aside>

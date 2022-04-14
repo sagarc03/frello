@@ -1,0 +1,10 @@
+{% extends "base_generic.html" %}
+
+{% block base_generic %}
+  <div class="container is-flex" style="min-height: 100vh;position: relative">
+    {% include "sidebar.html" %}
+    <main class="is-flex-shrink-1 has-background-light p-4" style="width:100%">
+      {% block main %}{% endblock main %}
+    </main>
+  </div>
+{% endblock base_generic %}
