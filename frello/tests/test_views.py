@@ -71,7 +71,7 @@ def test_project_owner_can_add_contributor(client: Client) -> None:
         data={"contributor_id": contributor.pk},
     )
 
-    assert len(contributor.project_contributors.all()) == 1  # type: ignore
+    assert len(contributor.project_contributors.all()) == 1
 
 
 @pytest.mark.django_db
@@ -96,7 +96,7 @@ def test_project_contributor_can_add_contributor(client: Client) -> None:
         reverse("frello:contributor-add", kwargs={"project_id": project.pk}),
         data={"contributor_id": contributor_2.pk},
     )
-    assert len(contributor_2.project_contributors.all()) == 1  # type: ignore
+    assert len(contributor_2.project_contributors.all()) == 1
 
 
 @pytest.mark.django_db
@@ -122,7 +122,7 @@ def test_user_not_realted_to_the_project_cant_add_contributors(
         reverse("frello:contributor-add", kwargs={"project_id": project.pk}),
         data={"contributor_id": contributor_2.pk},
     )
-    assert len(contributor_2.project_contributors.all()) == 0  # type: ignore
+    assert len(contributor_2.project_contributors.all()) == 0
 
 
 @pytest.mark.django_db
@@ -146,7 +146,7 @@ def test_project_owner_can_remove_contributor(client: Client) -> None:
         ),
     )
 
-    assert len(contributor.project_contributors.all()) == 0  # type: ignore
+    assert len(contributor.project_contributors.all()) == 0
 
 
 @pytest.mark.django_db
@@ -174,7 +174,7 @@ def test_project_contributor_can_remove_contributor(client: Client) -> None:
             kwargs={"project_id": project.pk, "user_id": contributor_2.pk},
         ),
     )
-    assert len(contributor_2.project_contributors.all()) == 0  # type: ignore
+    assert len(contributor_2.project_contributors.all()) == 0
 
 
 @pytest.mark.django_db
@@ -203,7 +203,7 @@ def test_user_not_realted_to_the_project_cant_remove_contributors(
             kwargs={"project_id": project.pk, "user_id": contributor_1.pk},
         ),
     )
-    assert len(contributor_1.project_contributors.all()) == 1  # type: ignore
+    assert len(contributor_1.project_contributors.all()) == 1
 
 
 @pytest.mark.django_db
