@@ -81,7 +81,7 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
 
     def get_queryset(self) -> QuerySet[Any]:
         return Project.objects.filter(
-            Q(owner=self.request.user) | Q(contributors=self.request.user.pk)
+            Q(owner=self.request.user) or Q(contributors=self.request.user)
         ).all()
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
