@@ -250,15 +250,15 @@ def delete_issue(
     except Project.DoesNotExist:
         return HttpResponse(
             "Project does not exists.",
-            status=404,
+            status=400,
         )
     if (
         proj.owner != request.user
         and request.user not in proj.contributors.all()
     ):
         return HttpResponse(
-            "Project does not exists.",
-            status=404,
+            "Project does not exists for user.",
+            status=400,
         )
 
     try:
@@ -266,7 +266,7 @@ def delete_issue(
     except Issue.DoesNotExist:
         return HttpResponse(
             "Issue does not exists.",
-            status=404,
+            status=400,
         )
     issue.is_delete = True
     issue.save()
@@ -358,7 +358,7 @@ def update_issue(
     ):
         return HttpResponse(
             "issue does not exists.",
-            status=404,
+            status=400,
         )
     issue = Issue.objects.get(
         project=Project.objects.get(pk=project_id),
@@ -368,7 +368,7 @@ def update_issue(
     if "status" not in request.POST:
         return HttpResponse(
             "status missing.",
-            status=404,
+            status=400,
         )
     if "description" in request.POST:
         issue.description = request.POST["description"]

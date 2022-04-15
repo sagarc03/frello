@@ -41,19 +41,14 @@ urlpatterns = [
         name="issue-delete",
     ),
     path(
-        "project/<int:project_id>/issue/<int:issue_id>/update/",
-        add_issue,
+        "project/<int:project_id>/issue/<int:issue_number>/update",
+        update_issue,
         name="issue-update",
     ),
     path(
         "project/<int:project_id>/issue/<int:issue_number>/",
         issue_page,
         name="issue-page",
-    ),
-    path(
-        "project/<int:project_id>/issue/<int:issue_number>/update",
-        update_issue,
-        name="issue-update",
     ),
     path("", Dashboard.as_view(), name="index"),
 ]
