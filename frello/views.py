@@ -109,21 +109,31 @@ def add_contributor_to_project(
     if any(key not in request.POST for key in ("contributor_id",)):
         return HttpResponse(
             "contributors and project are required",
-            status=404,
+            status=400,
         )
+
     try:
         proj = Project.objects.get(pk=project_id)
     except Project.DoesNotExist:
         return HttpResponse(
             "Project does not exists.",
-            status=404,
+            status=400,
         )
+    if (
+        proj.owner != request.user
+        and request.user not in proj.contributors.all()
+    ):
+        return HttpResponse(
+            "Project does not exists.",
+            status=400,
+        )
+
     try:
         user = get_user_model().objects.get(pk=request.POST["contributor_id"])
     except get_user_model().DoesNotExist:
         return HttpResponse(
             "user not found.",
-            status=404,
+            status=400,
         )
     proj.contributors.add(user)
     proj.save()
@@ -153,6 +163,14 @@ def delete_contributor(
         return HttpResponse(
             "Project does not exists.",
             status=404,
+        )
+    if (
+        proj.owner != request.user
+        and request.user not in proj.contributors.all()
+    ):
+        return HttpResponse(
+            "Project does not exists.",
+            status=400,
         )
     try:
         user = get_user_model().objects.get(pk=user_id)
