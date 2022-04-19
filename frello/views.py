@@ -1,4 +1,5 @@
 """frello views"""
+from itertools import chain
 from typing import Any
 
 from django.contrib.auth import get_user_model
@@ -312,6 +313,7 @@ def issue_page(
             "issue does not exists.",
             status=404,
         )
+    project = Project.objects.get(pk=project_id)
     return render(
         request,
         template_name="frello/issue_page.html",
@@ -325,6 +327,9 @@ def issue_page(
                 issue_number=issue_number,
             ),
             "issue_status": Issue.Status.choices,
+            "all_contributors": list(
+                chain([project.owner], project.contributors.all())
+            ),
         },
     )
 
@@ -360,8 +365,9 @@ def update_issue(
             "issue does not exists.",
             status=400,
         )
+    project = Project.objects.get(pk=project_id)
     issue = Issue.objects.get(
-        project=Project.objects.get(pk=project_id),
+        project=project,
         issue_number=issue_number,
     )
 
@@ -374,6 +380,12 @@ def update_issue(
         issue.description = request.POST["description"]
     if "status" in request.POST:
         issue.status = request.POST["status"]
+
+    if "assigned_to" in request.POST:
+        issue.assigned_to = get_user_model().objects.get(
+            pk=request.POST["assigned_to"]
+        )
+
     issue.save()
     return render(
         request,
@@ -382,5 +394,8 @@ def update_issue(
             "project": Project.objects.get(pk=project_id),
             "issue": issue,
             "issue_status": Issue.Status.choices,
+            "all_contributors": list(
+                chain([project.owner], project.contributors.all())
+            ),
         },
     )

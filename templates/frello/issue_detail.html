@@ -37,6 +37,22 @@
           </div>
         </div>
       </fieldset>
+
+      <div class="field">
+        <label class="label">Assigned To</label>
+        <div class="control">
+          <div class="select">
+            <select name="assigned_to">
+              {% if issue.assigned_to is None %}
+                <option value="----" selected>-----</option>
+              {% endif %}
+              {% for contributors in all_contributors %}
+                <option value={{ contributors.pk }} {% if issue.assigned_to.pk == contributors.pk %} selected {% endif %}>{{ contributors.username }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </form>

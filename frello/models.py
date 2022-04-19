@@ -47,3 +47,9 @@ class Issue(models.Model):
     title = models.CharField(max_length=150)
     description = models.TextField()
     is_delete = models.BooleanField(default=False)
+    assigned_to = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.DO_NOTHING,
+        null=True,
+        related_name="issue_assigned_to",
+    )

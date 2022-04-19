@@ -477,3 +477,135 @@ def test_user_not_realted_to_a_project_cant_delete_issue(
         ),
     )
     assert not Issue.objects.get(issue_number=1, project=project).is_delete
+
+
+@pytest.mark.django_db
+def test_project_owner_can_assign_an_issue(client: Client) -> None:
+    """
+    Project owner can assigned user to a task
+    """
+    proj_owner = get_user_model().objects.create(
+        username="test", email="test@local.com"
+    )
+    contributor_1 = get_user_model().objects.create(
+        username="test1", email="test1@local.com"
+    )
+    project = Project.objects.create(name="test_project", owner=proj_owner)
+    project.contributors.add(contributor_1)
+    issue = Issue.objects.create(
+        issue_number=1,
+        project=project,
+        created_by=proj_owner,
+        title="test issue",
+        description="",
+    )
+
+    client.force_login(proj_owner)
+    client.post(
+        reverse(
+            "frello:issue-update",
+            kwargs={
+                "project_id": project.pk,
+                "issue_number": issue.issue_number,
+            },
+        ),
+        data={
+            "description": "",
+            "status": "CL",
+            "assigned_to": contributor_1.pk,
+        },
+    )
+    assigned_user = Issue.objects.get(
+        issue_number=1, project=project
+    ).assigned_to
+    assert assigned_user and assigned_user.pk == contributor_1.pk
+
+
+@pytest.mark.django_db
+def test_project_contributor_can_assign_an_issue(client: Client) -> None:
+    """
+    Project contributor can assign an issue
+    """
+    proj_owner = get_user_model().objects.create(
+        username="test", email="test@local.com"
+    )
+    contributor_1 = get_user_model().objects.create(
+        username="test1", email="test1@local.com"
+    )
+    contributor_2 = get_user_model().objects.create(
+        username="test2", email="test2@local.com"
+    )
+
+    project = Project.objects.create(name="test_project", owner=proj_owner)
+    project.contributors.add(contributor_1)
+    project.contributors.add(contributor_2)
+    issue = Issue.objects.create(
+        issue_number=1,
+        project=project,
+        created_by=proj_owner,
+        title="test issue",
+        description="",
+    )
+
+    client.force_login(contributor_1)
+    client.post(
+        reverse(
+            "frello:issue-update",
+            kwargs={
+                "project_id": project.pk,
+                "issue_number": issue.issue_number,
+            },
+        ),
+        data={
+            "description": "",
+            "status": "CL",
+            "assigned_to": contributor_2.pk,
+        },
+    )
+    assigned_user = Issue.objects.get(
+        issue_number=1, project=project
+    ).assigned_to
+    assert assigned_user and assigned_user.pk == contributor_2.pk
+
+
+@pytest.mark.django_db
+def test_user_not_realted_to_a_project_cant_assign_issue(
+    client: Client,
+) -> None:
+    """
+    user not related can't delete an issue
+    """
+    proj_owner = get_user_model().objects.create(
+        username="test", email="test@local.com"
+    )
+    contributor_1 = get_user_model().objects.create(
+        username="test1", email="test1@local.com"
+    )
+    project = Project.objects.create(name="test_project", owner=proj_owner)
+    issue = Issue.objects.create(
+        issue_number=1,
+        project=project,
+        created_by=proj_owner,
+        title="test issue",
+        description="",
+    )
+
+    client.force_login(contributor_1)
+    client.post(
+        reverse(
+            "frello:issue-update",
+            kwargs={
+                "project_id": project.pk,
+                "issue_number": issue.issue_number,
+            },
+        ),
+        data={
+            "description": "",
+            "status": "CL",
+            "assigned_to": contributor_1.pk,
+        },
+    )
+    assigned_user = Issue.objects.get(
+        issue_number=1, project=project
+    ).assigned_to
+    assert assigned_user is None
