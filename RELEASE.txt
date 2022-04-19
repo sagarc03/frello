@@ -1,6 +1,3 @@
 # New Features
 
-- Login: Ability for users to sign into the application.
-- Account Creation: Ability for potential users to create an account.
-- Contributors Add: Add contributor to a project
-- Issue/Task Creation: Ability to create task/issue specifying the task details and status.
+- Assign Issue: Ability for users to assign issue to differenct contributor.
